@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 
-from alerts.model import Alert, Acknowledgement
+from alerts.models import Alert, Acknowledgement
 
 class AlertSerializer(serializers.ModelSerializer):
     """Serializer for alerts."""

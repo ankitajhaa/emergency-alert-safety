@@ -7,13 +7,14 @@ from rest_framework.response import Response
 
 from alerts.models import Alert, Acknowledgement
 from alerts.serializers import AlertSerializer, AcknowledgementSerializer
+from alerts.permissions import IsAdminOrReadOnly
 
 class AlertViewSet(viewsets.ModelViewSet):
     """View for managing alerts."""
 
     serializer_class = AlertSerializer
     queryset = Alert.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly]
 
     def perform_create(self, serializer):
         """Set the creator of the alert."""

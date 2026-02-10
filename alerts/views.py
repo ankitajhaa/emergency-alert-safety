@@ -4,6 +4,7 @@ Views for alert APIs.
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 
 from alerts.models import Alert, Acknowledgement
 from alerts.serializers import AlertSerializer, AcknowledgementSerializer
@@ -44,6 +45,23 @@ class AlertViewSet(viewsets.ModelViewSet):
         user = self.request.user
 
         if user.role == 'ADMIN':
-            return Alert.objects.all()
+            return Alert.objects.all().order_by('-created_at')
         
-        return Alert.objects.filter(created_by=user)
+        return Alert.objects.filter(status='ACTIVE').order_by('-created_at')
+    
+    @action(detail=False, methods=['get'])
+    def active(self, request):
+        """Return only active alerts."""
+        alerts = self.queryset.filter(status='ACTIVE')
+        serializer = self.get_serializer(alerts, many=True)
+        return Response(serializer.data)
+    
+    def perform_update(self, serializer):
+        """Only admin can resolve alerts."""
+        user = self.request.user
+
+        if 'status' in serializer.validated_data:
+            if serializer.validated_data['status'] == 'RESOLVED' and user.role != 'ADMIN':
+                raise PermissionDenied("Only admins can resolve alerts.")
+
+        serializer.save()

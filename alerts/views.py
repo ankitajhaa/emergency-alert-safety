@@ -38,3 +38,12 @@ class AlertViewSet(viewsets.ModelViewSet):
         
         serializer = AcknowledgementSerializer(ack)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    def get_queryset(self):
+        """Returm alerts for the current user."""
+        user = self.request.user
+
+        if user.role == 'ADMIN':
+            return Alert.objects.all()
+        
+        return Alert.objects.filter(created_by=user)

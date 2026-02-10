@@ -139,3 +139,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Emergency Alert API',
+    'DESCRIPTION': 'API for managing emergency alerts and acknowledgements.',
+    'VERSION': '1.0.0',
+}

@@ -15,7 +15,13 @@ class AlertViewSet(viewsets.ModelViewSet):
 
     serializer_class = AlertSerializer
     queryset = Alert.objects.all()
-    permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly]
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            permission_classes = [IsAdminOrReadOnly]
+        else:
+            permission_classes = [permissions.IsAuthenticated]
+
+        return [p() for p in permission_classes]
 
     def perform_create(self, serializer):
         """Set the creator of the alert."""
@@ -38,7 +44,7 @@ class AlertViewSet(viewsets.ModelViewSet):
             )
         
         serializer = AcknowledgementSerializer(ack)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     def get_queryset(self):
         """Returm alerts for the current user."""

@@ -7,9 +7,6 @@ from django.test import TestCase
 from alerts.models import Alert
 
 
-ALERTS_URL = reverse('alerts-list')
-
-
 def create_user(**params):
     return get_user_model().objects.create_user(**params)
 
@@ -34,7 +31,8 @@ class AlertApiTests(TestCase):
             'severity': 'HIGH',
         }
 
-        res = self.client.post(ALERTS_URL, payload)
+        url = reverse('alerts:alerts-list')
+        res = self.client.post(url, payload)
 
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -53,7 +51,8 @@ class AlertApiTests(TestCase):
             'severity': 'HIGH',
         }
 
-        res = self.client.post(ALERTS_URL, payload)
+        url = reverse('alerts:alerts-list')
+        res = self.client.post(url, payload)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
@@ -73,10 +72,10 @@ class AlertApiTests(TestCase):
             created_by=user,
         )
 
-        url = reverse('alerts-ack', args=[alert.id])
+        url = reverse('alerts:alerts-ack', args=[alert.id])
         res = self.client.post(url)
 
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_user_cannot_ack_twice(self):
         user = create_user(
@@ -94,7 +93,7 @@ class AlertApiTests(TestCase):
             created_by=user,
         )
 
-        url = reverse('alerts-ack', args=[alert.id])
+        url = reverse('alerts:alerts-ack', args=[alert.id])
 
         self.client.post(url)
         res = self.client.post(url)
@@ -109,7 +108,7 @@ class AlertApiTests(TestCase):
             role='USER'
         )
         self.client.force_authenticate(user)
-        
+
         Alert.objects.create(
             title='Fire',
             description='Danger',
@@ -126,7 +125,8 @@ class AlertApiTests(TestCase):
             created_by=user,
         )
 
-        res = self.client.get(ALERTS_URL)
+        url = reverse('alerts:alerts-list')
+        res = self.client.get(url)
 
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['status'], 'ACTIVE')

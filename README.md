@@ -1,22 +1,44 @@
-# Emergency Alert & Safety Broadcast
+# Emergency Alert & Safety Broadcast API
 
-## Objective: A Backend API for managing emergency alerts and safety broadcasts within a campus or organization. The system should allow administrators to create alerts and users to receive, acknowledge, and track critical safety information.
-
-----
+Backend system for managing emergency alerts and safety broadcasts within a campus or organization. Administrators can create and manage alerts, while users can view active alerts and acknowledge that they have seen them.
+ 
+---
 
 ## Tech Stack
-- Django
+
+- Python / Django
 - Django REST Framework
 - JWT Authentication
 - PostgreSQL
-- Docker
+- Docker & Docker Compose
 
-----
+---
 
-## Features:
-- User registration and login
-- Token-based authentication
-- Support for Admin and Normal User roles
+## Features
+
+### Authentication & Roles
+- User registration
+- JWT login
+- Role based access (`ADMIN`, `USER`)
+
+### Alert Management
+- Admins can create alerts
+- Admins can update or resolve alerts
+- All alerts stored with creator and timestamp
+
+### User Feed
+- Admin → see all alerts
+- Normal users → see only ACTIVE alerts
+
+### Acknowledgement System
+- Users can acknowledge an alert
+- Duplicate acknowledgements are blocked
+- Timestamp recorded
+
+### Business Rules
+- Only admins can modify alerts
+- Resolved alerts remain for history/audit
+- One acknowledgement per user per alert
 
 ----
 

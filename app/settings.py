@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
 
@@ -144,4 +144,9 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Emergency Alert API',
     'DESCRIPTION': 'API for managing emergency alerts and acknowledgements.',
     'VERSION': '1.0.0',
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }

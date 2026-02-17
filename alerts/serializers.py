@@ -23,7 +23,7 @@ class AlertSerializer(serializers.ModelSerializer):
             'created_by',
             'created_at',
         ]
-        read_only_fields = ['id', 'status', 'created_by', 'created_at']
+        read_only_fields = ['id', 'created_by', 'created_at']
 
 class AcknowledgementSerializer(serializers.ModelSerializer):
     """Serializer for acknowledging alerts."""
